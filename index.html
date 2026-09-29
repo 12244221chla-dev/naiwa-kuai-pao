@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+  <meta name="theme-color" content="#6fc9e6">
+  <title>奶娃快跑 · 3D 跑酷</title>
+  <link rel="stylesheet" href="style.css?v=2">
+  <script type="importmap">
+    {"imports":{"three":"https://unpkg.com/three@0.180.0/build/three.module.js","three/addons/":"https://unpkg.com/three@0.180.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="game.js?v=2"></script>
+</head>
+<body>
+  <main id="app-shell" class="game-shell home-mode">
+    <div id="game" aria-label="奶娃三轨道跑酷游戏"></div>
+    <div class="top-hud game-hud">
+      <div class="brand"><span class="brand-dot">奶</span><span>奶娃快跑</span></div>
+      <div class="stats">
+        <div class="pill"><span>距离</span><strong id="distance">0</strong><small>m</small></div>
+        <div class="pill coin-pill"><span class="star">✦</span><strong id="coins">0</strong></div>
+      </div>
+      <button id="pause" class="icon-button" aria-label="暂停">Ⅱ</button>
+    </div>
+    <div class="mission game-hud"><span class="pulse"></span><span id="status">收集奶星，跑得更远！</span></div>
+    <div class="speed-card game-hud"><small>冲刺速度</small><strong id="speed">0</strong><span>km/h</span><div class="speed-track"><i id="speedbar"></i></div></div>
+    <div id="hint" class="hint game-hud">← → 换道　↑ 跳跃　↓ 滑铲</div>
+    <div class="touch-controls game-hud" aria-label="触摸操作">
+      <button data-action="left">←</button><button data-action="jump">↑</button><button data-action="slide">↓</button><button data-action="right">→</button>
+    </div>
+    <section id="home-screen" class="home-screen">
+      <header class="home-topbar">
+        <div class="brand"><span class="brand-dot">奶</span><span>奶娃小镇</span></div>
+        <div class="home-wallet"><span>✦ <strong id="wallet-coins">128</strong></span><span>🍮 <strong id="snack-count">3</strong></span></div>
+        <button class="icon-button" id="help-button" aria-label="玩法说明">?</button>
+      </header>
+      <div class="home-label"><span class="sun-dot">☀</span><span>早上好，奶娃今天也想出去冒险！</span></div>
+      <aside class="pet-card">
+        <span class="eyebrow">你的跑酷搭档</span>
+        <h1>大奶娃</h1>
+        <p id="pet-mood">心情不错，肚子也不饿～</p>
+        <div class="bond-row"><span>活力</span><div class="bond-bar"><i id="energy-bar"></i></div><b id="energy-label">80%</b></div>
+        <button id="feed-button" class="feed-button"><span>🍮</span><span><b>喂奶娃吃点心</b><small>点心 × <i id="snack-inline">3</i></small></span><strong>＋</strong></button>
+      </aside>
+      <div class="home-stage-note"><span class="stage-sparkle">✦</span><span id="home-map-name">阳光铁路</span><small>跑酷地图</small></div>
+      <section class="home-dock">
+        <div class="dock-main">
+          <div class="dock-tabs" role="tablist" aria-label="首页功能">
+            <button class="dock-tab selected" data-home-tab="wardrobe" role="tab" aria-selected="true">👕 换装</button>
+            <button class="dock-tab" data-home-tab="maps" role="tab" aria-selected="false">🗺️ 地图</button>
+          </div>
+          <div id="wardrobe-panel" class="choice-panel">
+            <div class="panel-heading"><span><b>今日穿搭</b><small>挑一套喜欢的造型</small></span><span class="owned-count">衣橱 · 3</span></div>
+            <div class="choice-row outfit-row">
+              <button class="choice-card selected" data-outfit="scarf"><span class="outfit-icon scarf-icon">🧣</span><span><b>薄荷围巾</b><small>清爽出发</small></span><i>✓</i></button>
+              <button class="choice-card" data-outfit="cap"><span class="outfit-icon cap-icon">🧢</span><span><b>阳光帽</b><small>活力满满</small></span><i></i></button>
+              <button class="choice-card" data-outfit="pack"><span class="outfit-icon pack-icon">🎒</span><span><b>探险背包</b><small>装满奶星</small></span><i></i></button>
+            </div>
+          </div>
+          <div id="maps-panel" class="choice-panel hidden">
+            <div class="panel-heading"><span><b>选择跑酷地图</b><small>换个风景继续冒险</small></span><span class="owned-count">地图 · 3</span></div>
+            <div class="choice-row map-row">
+              <button class="choice-card map-card selected" data-map="sunny"><span class="map-icon sunny-icon">🚂</span><span><b>阳光铁路</b><small>经典三轨道</small></span><i>✓</i></button>
+              <button class="choice-card map-card" data-map="coast"><span class="map-icon coast-icon">🌊</span><span><b>海风栈道</b><small>清凉海岸线</small></span><i></i></button>
+              <button class="choice-card map-card" data-map="candy"><span class="map-icon candy-icon">🍬</span><span><b>糖果小镇</b><small>甜蜜新旅程</small></span><i></i></button>
+            </div>
+          </div>
+        </div>
+        <button id="play-button" class="play-button"><span>点击开跑</span><b>▶</b><small>当前地图：<i id="play-map-name">阳光铁路</i></small></button>
+      </section>
+      <div id="feed-fx" class="feed-fx" aria-live="polite"></div>
+    </section>
+    <section id="overlay" class="overlay hidden">
+      <div class="dialog">
+        <div class="eyebrow">SUNNY RAIL RUN</div>
+        <h1 id="overlay-title">准备好了吗？</h1>
+        <p id="overlay-copy">左右换道躲避障碍，跳过路障、滑过横杆，尽可能多地收集奶星。</p>
+        <div class="howto"><span>← →<small>换道</small></span><span>↑<small>跳跃</small></span><span>↓<small>滑铲</small></span></div>
+        <button id="start" class="primary-button">开始跑酷 <span>➜</span></button>
+        <button id="home-button" class="secondary-button">返回首页</button>
+        <small class="footnote">键盘、触屏和 WASD 均可操作</small>
+      </div>
+    </section>
+    <div class="vignette"></div>
+  </main>
+  <noscript>请启用 JavaScript 来运行游戏。</noscript>
+</body>
+</html>
